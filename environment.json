@@ -1,0 +1,28 @@
+{
+	"id": "4100f3b3-c7eb-43ac-a22e-bc22cb13ceea",
+	"name": "DummyJSON-Env",
+	"values": [
+		{
+			"key": "token",
+			"type": "default",
+			"enabled": true,
+			"secret": true
+		},
+		{
+			"key": "product_id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "base_url",
+			"value": "https://dummyjson.com",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-09-06T18:29:11.840Z",
+	"_postman_exported_using": "Postman/12.26.5-260904-0231"
+}

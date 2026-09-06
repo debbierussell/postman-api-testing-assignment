@@ -1,0 +1,333 @@
+{
+  "info": {
+    "_postman_id": "ec60e11a-eef5-4d08-8526-bb682dfe1633",
+    "name": "CRUD-API-Tests",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58011548",
+    "_collection_link": "https://go.postman.co/collection/58011548-ec60e11a-eef5-4d08-8526-bb682dfe1633?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();\r",
+              "\r",
+              "// Store the access token\r",
+              "if (jsonData.accessToken) {\r",
+              "    pm.environment.set(\"token\", jsonData.accessToken);\r",
+              "    console.log(\"Token stored successfully!\");\r",
+              "}\r",
+              "\r",
+              "// Tests\r",
+              "pm.test(\"Login successful - status 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Access token received\", function () {\r",
+              "    pm.expect(jsonData.accessToken).to.exist;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"emilys\",\"password\":\"emilyspass\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 - GET Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Product has an ID\", function () {\r",
+              "    pm.expect(pm.response.json().id).to.exist;\r",
+              "});\r",
+              "pm.test(\"Product has a title\", function () {\r",
+              "    pm.expect(pm.response.json().title).to.exist;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - POST Create Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "var jsonData = pm.response.json();\r",
+              "if (jsonData.id) {\r",
+              "    pm.environment.set(\"product_id\", jsonData.id);\r",
+              "    console.log(\"Product ID saved: \" + jsonData.id);\r",
+              "}\r",
+              "pm.test(\"Product ID exists\", function () {\r",
+              "    pm.expect(jsonData.id).to.exist;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"My Test Product\",\r\n    \"price\": 99.99,\r\n    \"category\": \"electronics\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/products/add",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 - PUT Update Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Title updated correctly\", function () {\r",
+              "    pm.expect(pm.response.json().title).to.eql(\"Updated iPhone 9\");\r",
+              "});\r",
+              "pm.test(\"Price updated correctly\", function () {\r",
+              "    pm.expect(pm.response.json().price).to.eql(699.99);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Updated iPhone 9\",\r\n    \"price\": 699.99\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 - DELETE Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Product marked as deleted\", function () {\r",
+              "    pm.expect(pm.response.json().isDeleted).to.eql(true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "// Auto-login if token is missing\r",
+          "var token = pm.environment.get(\"token\");\r",
+          "\r",
+          "if (!token || token === \"\") {\r",
+          "    pm.sendRequest({\r",
+          "        url: \"https://dummyjson.com/auth/login\",\r",
+          "        method: \"POST\",\r",
+          "        header: {\r",
+          "            \"Content-Type\": \"application/json\"\r",
+          "        },\r",
+          "        body: {\r",
+          "            mode: \"raw\",\r",
+          "            raw: JSON.stringify({\r",
+          "                username: \"emilys\",\r",
+          "                password: \"emilyspass\"\r",
+          "            })\r",
+          "        }\r",
+          "    }, function (err, res) {\r",
+          "        if (!err) {\r",
+          "            var jsonData = res.json();\r",
+          "            if (jsonData.accessToken) {\r",
+          "                pm.environment.set(\"token\", jsonData.accessToken);\r",
+          "                console.log(\"Token auto-refreshed!\");\r",
+          "            }\r",
+          "        }\r",
+          "    });\r",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
